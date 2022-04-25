@@ -246,6 +246,7 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="key"
+        options={false}
         search={{
           labelWidth: 120,
         }}
@@ -372,22 +373,90 @@ const TableList: React.FC = () => {
         }}
         closable={false}
       >
-        {currentRow?.name && (
-          <ProDescriptions<API.RuleListItem>
-            column={2}
-            title={currentRow?.name}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.name,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.RuleListItem>[]}
-          />
-        )}
+        <Descriptions></Descriptions>
       </Drawer>
     </PageContainer>
   );
 };
 
+function Descriptions() {
+  return (
+    <ProDescriptions
+      title="dataSource and columns"
+      dataSource={{
+        id: '这是一段文本columns',
+        date: '20200809',
+        money: '1212100',
+        state: 'all',
+        state2: 'open',
+      }}
+      columns={[
+        {
+          title: '文本',
+          key: 'text',
+          dataIndex: 'id',
+          ellipsis: true,
+          copyable: true,
+          render: (record, args) => {
+            console.log(record, args);
+            return <div>{args.id}----hello world</div>
+          }
+        },
+        {
+          title: '状态',
+          key: 'state',
+          dataIndex: 'state',
+          valueType: 'select',
+          valueEnum: {
+            all: { text: '全部', status: 'Default' },
+            open: {
+              text: '未解决',
+              status: 'Error',
+            },
+            closed: {
+              text: '已解决',
+              status: 'Success',
+            },
+          },
+        },
+        {
+          title: '状态2',
+          key: 'state2',
+          dataIndex: 'state2',
+        },
+        {
+          title: '时间',
+          key: 'date',
+          dataIndex: 'date',
+          valueType: 'date',
+        },
+        {
+          title: 'money',
+          key: 'money',
+          dataIndex: 'money',
+          valueType: 'money',
+        },
+        {
+          title: '操作',
+          valueType: 'option',
+          render: () => [
+            <a target="_blank" rel="noopener noreferrer" key="link">
+              链路
+            </a>,
+            <a target="_blank" rel="noopener noreferrer" key="warning">
+              报警
+            </a>,
+            <a target="_blank" rel="noopener noreferrer" key="view">
+              查看
+            </a>,
+          ],
+        },
+      ]}
+    >
+      <ProDescriptions.Item label="百分比" valueType="percent">
+        100
+      </ProDescriptions.Item>
+    </ProDescriptions>
+  );
+};
 export default TableList;
